@@ -100,6 +100,58 @@
             }
         }
 
+        /* Play Music Button */
+        .play-music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .play-music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+        }
+
+        .play-music-btn.playing {
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 6px 30px rgba(255, 105, 180, 0.7);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .welcome {
             text-align: center;
             padding: 4rem 2rem 1.5rem;
@@ -113,6 +165,7 @@
             color: #ff69b4;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             animation: fadeInScale 2s ease;
+            cursor: pointer;
         }
 
         .welcome p {
@@ -527,11 +580,29 @@
             .final-message h2 {
                 font-size: 2.2rem;
             }
+
+            .play-music-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 
+
 <body>
+    <!-- Audio element without autoplay -->
+    <audio id="bg-music" loop>
+        <source src="Birthday.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating music button -->
+    <button class="play-music-btn" id="musicBtn" onclick="toggleMusic()" title="Click to play music">
+        🎵
+    </button>
 
     <div class="magic-sparkles"></div>
     <div class="floating-hearts">
@@ -544,7 +615,7 @@
 
     <!-- WELCOME -->
     <section class="welcome">
-        <h1>Happy Birthday, Anuska! ✨🎂</h1>
+        <h1 onclick="toggleMusic()">Happy Birthday, Anuska! ✨🎂</h1>
         <p>Singer. JEE warrior. Bookworm. Somehow also a normal human being. <em>We don't know how she does it
                 either.</em> 💀🎶</p>
     </section>
@@ -729,6 +800,33 @@
         <a href="#" class="mom-btn">📚 (the book characters also wish you a happy birthday)</a>
     </section>
 
+    <script>
+        let isPlaying = false;
+
+        function toggleMusic() {
+            const music = document.getElementById("bg-music");
+            const btn = document.getElementById("musicBtn");
+
+            if (isPlaying) {
+                // Pause music
+                music.pause();
+                btn.textContent = "🎵";
+                btn.classList.remove("playing");
+                isPlaying = false;
+            } else {
+                // Play music
+                music.volume = 0.3;
+                music.play().then(() => {
+                    btn.textContent = "🎶";
+                    btn.classList.add("playing");
+                    isPlaying = true;
+                }).catch((error) => {
+                    console.log("Audio play failed:", error);
+                    alert("Click the 🎵 button to play music!");
+                });
+            }
+        }
+    </script>
 </body>
 
 </html>
